@@ -30,6 +30,8 @@ impl TypeMapKey for CommandCounter {
 
 #[tokio::main]
 async fn main() {
+	pretty_env_logger::init();
+
 	// Get the discord bot token
 	let token = env::var("DISCORD_TOKEN").expect("Expected a token in the environment");
 
