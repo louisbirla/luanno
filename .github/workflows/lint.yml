@@ -1,0 +1,40 @@
+name: Lint
+on: [push]
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Auto-cancel redundant jobs
+        uses: technote-space/auto-cancel-redundant-job@v1
+
+      - name: Checkout the repo
+        uses: actions/checkout@v2
+        with:
+          submodules: true
+
+      - name: Install Rust toolchain
+        uses: actions-rs/toolchain@v1
+        with:
+          toolchain: nightly
+          override: true
+          components: rustfmt, clippy
+
+      - name: Format
+        uses: actions-rs/cargo@v1
+        with:
+          command: fmt
+
+      - name: Check if there are changes in formatting
+        id: changes
+        uses: UnicornGlobal/has-changes-action@v1.0.12
+
+      - name: Fail if formatting is off
+        if: steps.changes.outputs.changed == 1
+        run: exit 1
+
+      - name: Clippy checks
+        uses: actions-rs/clippy-check@v1
+        if: ${{ !contains(github.ref, 'dependabot') }}
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          args: --all-features
