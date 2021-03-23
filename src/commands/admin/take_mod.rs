@@ -19,5 +19,7 @@ pub async fn take_mod(ctx: &Context, msg: &Message, args: Args) -> CommandResult
 	let mut member = guild.member(&ctx.http, id).await.unwrap();
 	member.remove_role(&ctx.http, MOD_ROLE_ID).await.unwrap();
 
+	msg.react(&ctx.http, '👍').await.unwrap();
+
 	Ok(())
 }
