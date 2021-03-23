@@ -15,3 +15,8 @@ args = ["clippy"]
 [tasks.run]
 command = "cargo"
 args = ["run"]
+
+[tasks.dev]
+watch = true
+command = "cargo"
+args = ["run"]
