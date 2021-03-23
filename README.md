@@ -1,5 +1,5 @@
 <h1 align="center" class="heading">
-	<img src="gem.png" height="35" />
+	<img src="gem.png" height="25" />
 	<span class="main-heading">LUANNO</span>
 </h1>
 
