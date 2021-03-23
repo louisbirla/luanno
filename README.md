@@ -46,15 +46,3 @@ The caveat to using the tool is that you'll need a GitHub account to interact wi
 ---
 
 A project by [Louis Birla](https://birla.io)
-
-<style>
-.heading {
-	display: flex;
-	width: 100%;
-	justify-content: center;
-	align-items: center;
-}
-.main-heading {
-	margin-left: 15px;
-}
-</style>
