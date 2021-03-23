@@ -1,31 +1,22 @@
 use events::Handler;
 use log::*;
+use mongodb::{options::ClientOptions, Client as MongoClient, Database};
 use serenity::prelude::*;
-use serenity::{
-	client::bridge::gateway::ShardManager, framework::standard::StandardFramework, http::Http,
-};
-use std::{collections::HashMap, env, sync::Arc};
-use tokio::sync::Mutex;
+use serenity::{framework::standard::StandardFramework, http::Http};
+use std::{env, sync::Arc};
 
 mod commands;
 use commands::*;
 
 pub mod consts;
 mod events;
+pub mod helpers;
+pub mod models;
 
-// A container type is created for inserting into the Client's `data`, which
-// allows for data to be accessible across all events and framework commands, or
-// anywhere else that has a copy of the `data` Arc.
-struct ShardManagerContainer;
+struct DatabaseConnection;
 
-impl TypeMapKey for ShardManagerContainer {
-	type Value = Arc<Mutex<ShardManager>>;
-}
-
-struct CommandCounter;
-
-impl TypeMapKey for CommandCounter {
-	type Value = HashMap<String, u64>;
+impl TypeMapKey for DatabaseConnection {
+	type Value = Arc<Database>;
 }
 
 #[tokio::main]
@@ -37,6 +28,13 @@ async fn main() {
 
 	// Create an HTTP cache & context for the bot
 	let http = Http::new_with_token(&token);
+
+	let client_options =
+		ClientOptions::parse(&env::var("MONGO_URL").expect("Expected the MongoDB connection URL"))
+			.await
+			.unwrap();
+	let client = MongoClient::with_options(client_options).unwrap();
+	let db = client.database(&env::var("DB_NAME").expect("Expected the DB name"));
 
 	// Fetch the bot's id
 	let bot_id = match http.get_current_application_info().await {
@@ -55,8 +53,11 @@ async fn main() {
 				.prefix("!")
 				.delimiters(vec![" "])
 		})
+		.bucket("hourly", |b| b.delay(60 * 60))
+		.await
 		.help(&HELP_COMMAND)
 		.group(&GENERAL_GROUP)
+		.group(&PLAYER_GROUP)
 		.group(&MODCOMMANDS_GROUP);
 
 	// Make the client
@@ -68,8 +69,7 @@ async fn main() {
 
 	{
 		let mut data = client.data.write().await;
-		data.insert::<CommandCounter>(HashMap::default());
-		data.insert::<ShardManagerContainer>(Arc::clone(&client.shard_manager));
+		data.insert::<DatabaseConnection>(Arc::new(db));
 	}
 
 	if let Err(why) = client.start().await {
