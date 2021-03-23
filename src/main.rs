@@ -58,6 +58,7 @@ async fn main() {
 		.help(&HELP_COMMAND)
 		.group(&GENERAL_GROUP)
 		.group(&PLAYER_GROUP)
+		.group(&CHARACTER_GROUP)
 		.group(&MODCOMMANDS_GROUP);
 
 	// Make the client

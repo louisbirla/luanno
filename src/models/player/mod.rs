@@ -7,11 +7,14 @@ use mongodb::{
 };
 use serenity::model::id::UserId;
 
+use super::entity::Entity;
+
 pub mod create;
 
 pub struct Player {
 	pub user_id: UserId,
 	pub gum: i64,
+	pub entity: Option<Entity>,
 }
 
 impl Player {
@@ -33,8 +36,12 @@ impl Player {
 		let player_collection = db.collection(PLAYER_COLLECTION_NAME);
 
 		let filter = doc! { "user_id": user_id.as_u64() };
-		let player = player_collection.find_one(filter, None).await?;
-		let player: Option<Self> = player.map(|doc| doc.into());
+		let doc = player_collection.find_one(filter, None).await?;
+		let mut player: Option<Self> = None;
+
+		if let Some(doc) = doc {
+			player = Some(Self::from_doc(db, doc).await?);
+		}
 
 		Ok(player)
 	}
@@ -57,13 +64,24 @@ impl Player {
 	}
 }
 
-impl From<Document> for Player {
-	fn from(doc: Document) -> Self {
+impl Player {
+	pub async fn from_doc(db: &Database, doc: Document) -> Result<Self, Error> {
 		let user_id = UserId(doc.get("user_id").and_then(Bson::as_i64).unwrap() as u64);
 		let gum = doc
 			.get("gum")
 			.and_then(Bson::as_i64)
 			.unwrap_or(PLAYER_INITIAL_GUM);
-		Self { user_id, gum }
+		let entity_id = doc.get("entity").and_then(Bson::as_object_id);
+		let mut entity: Option<Entity> = None;
+
+		if let Some(id) = entity_id {
+			entity = Some(Entity::from_id(db, id).await?);
+		}
+
+		Ok(Self {
+			user_id,
+			gum,
+			entity,
+		})
 	}
 }
