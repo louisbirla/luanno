@@ -7,7 +7,7 @@ const HOURLY_GUM: i64 = 10;
 
 #[command]
 #[bucket = "hourly"]
-#[description = "Claim free gum hourly."]
+/// Claim free gum hourly.
 pub async fn hourly(ctx: &Context, msg: &Message) -> CommandResult {
 	let data = ctx.data.read().await;
 	let db = data_db(&data);

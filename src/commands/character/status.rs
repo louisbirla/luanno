@@ -4,12 +4,13 @@ use serenity::model::prelude::*;
 use serenity::prelude::*;
 
 #[command]
-#[description = "Show your character status"]
+/// Show your character status
 pub async fn status(ctx: &Context, msg: &Message) -> CommandResult {
 	let data = ctx.data.read().await;
 	let db = data_db(&data);
 
 	let player = Player::from_user_id(db, msg.author.id).await?;
+	// Make sure the user has a character
 	let entity = if let Some(entity) = player.entity {
 		entity
 	} else {

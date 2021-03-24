@@ -11,9 +11,9 @@ use serenity::{
 
 use crate::consts::{GUILD_ID, MOD_ROLE_ID};
 
-// Checks if you are me. You may be! (probably are not.)
 #[check]
 #[name = "Mod"]
+// Checks if you are me. You may be! (probably are not.)
 pub async fn mod_check(
 	ctx: &Context,
 	msg: &Message,
@@ -28,8 +28,8 @@ pub async fn mod_check(
 }
 
 #[command]
-#[description = "Check if you are a mod"]
 #[aliases("amimod")]
+/// Check if you are a mod
 pub async fn am_i_mod(ctx: &Context, msg: &Message) -> CommandResult {
 	if is_mod(&ctx.http, &msg.author).await? {
 		msg.reply(&ctx.http, "You are a mod.").await?;
@@ -40,6 +40,7 @@ pub async fn am_i_mod(ctx: &Context, msg: &Message) -> CommandResult {
 	Ok(())
 }
 
+/// Returns true if the user has the mod role
 pub async fn is_mod(cache_http: impl CacheHttp, user: &User) -> Result<bool, Error> {
 	user.has_role(cache_http, GUILD_ID, MOD_ROLE_ID).await
 }

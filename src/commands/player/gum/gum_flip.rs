@@ -5,12 +5,14 @@ use serenity::model::prelude::*;
 use serenity::prelude::*;
 
 #[command]
-#[description = "Wager some gum, choose heads or tails, then if you're right you'll get twice the gum back!"]
+/// Wager some gum, choose heads or tails, then if you're right you'll get twice the gum back!
 pub async fn flip(ctx: &Context, msg: &Message, mut args: Args) -> CommandResult {
+	// Parse the inputs
 	let wager = args.single::<i64>()?;
 	let prediction = args.single::<String>()?;
 
 	let options = vec!["heads".to_string(), "tails".to_string()];
+	// Make sure that the prediction is either "heads" or "tails"
 	if !options.contains(&prediction) {
 		msg.reply(&ctx.http, "You must choose either heads or tails.")
 			.await?;
@@ -22,6 +24,7 @@ pub async fn flip(ctx: &Context, msg: &Message, mut args: Args) -> CommandResult
 
 	let mut player = Player::from_user_id(db, msg.author.id).await?;
 
+	// Make sure the user has enough to pay the wager
 	if player.gum < wager {
 		msg.reply(
 			&ctx.http,
@@ -31,6 +34,7 @@ pub async fn flip(ctx: &Context, msg: &Message, mut args: Args) -> CommandResult
 		return Ok(());
 	}
 
+	// Randomly choose heads or tails
 	let chosen = options
 		.choose(&mut rand::thread_rng())
 		.expect("There were no options");

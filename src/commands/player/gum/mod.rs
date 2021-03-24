@@ -9,9 +9,9 @@ mod gum_flip;
 use gum_flip::*;
 
 #[command]
-#[description = "Display your gum balance."]
 #[aliases("mygum", "my_gum")]
 #[sub_commands(hourly, flip)]
+/// Display how much gum you have.
 pub async fn gum(ctx: &Context, msg: &Message) -> CommandResult {
 	let data = ctx.data.read().await;
 	let db = data_db(&data);

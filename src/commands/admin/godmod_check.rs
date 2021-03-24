@@ -5,9 +5,9 @@ use serenity::framework::standard::{
 use serenity::model::prelude::*;
 use serenity::prelude::*;
 
-// Checks if you are me. You may be! (probably are not.)
 #[check]
 #[name = "Godmod"]
+// Checks if you are me. You may be! (probably are not.)
 pub async fn godmod_check(
 	_: &Context,
 	msg: &Message,
@@ -22,8 +22,8 @@ pub async fn godmod_check(
 }
 
 #[command]
-#[description = "Check if you are the Godmod"]
 #[aliases("amigodmod")]
+/// Check if you are the Godmod
 pub async fn am_i_godmod(ctx: &Context, msg: &Message) -> CommandResult {
 	if is_owner(msg.author.id) {
 		msg.reply(&ctx.http, "You are the Godmod.").await?;
@@ -34,6 +34,7 @@ pub async fn am_i_godmod(ctx: &Context, msg: &Message) -> CommandResult {
 	Ok(())
 }
 
+/// Returns true if the is belongs to Louis Birla
 pub fn is_owner(user_id: UserId) -> bool {
 	user_id == 408649315095937045
 }

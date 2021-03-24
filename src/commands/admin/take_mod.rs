@@ -8,8 +8,8 @@ use serenity::{prelude::*, utils::parse_mention};
 #[command]
 #[checks(Godmod)]
 #[only_in(guilds)]
-#[description = "Removes a user's mod role."]
 #[aliases("takemod")]
+/// Removes a user's mod role.
 pub async fn take_mod(ctx: &Context, msg: &Message, args: Args) -> CommandResult {
 	let mention = args.rest();
 
@@ -18,7 +18,10 @@ pub async fn take_mod(ctx: &Context, msg: &Message, args: Args) -> CommandResult
 		.await
 		.expect("Accessing the guild broke.");
 
+	// Get the id of the user mentioned
 	let id = parse_mention(mention).expect("Mention was invalid");
+
+	// Remove the mod role from the user
 	let mut member = guild.member(&ctx.http, id).await?;
 	member.remove_role(&ctx.http, MOD_ROLE_ID).await?;
 

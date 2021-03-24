@@ -3,7 +3,8 @@ use mongodb::{bson::oid::ObjectId, error::Error, Database};
 use super::{types::EntityType, Entity};
 
 impl Entity {
-	pub async fn character_default(db: &Database) -> Result<Self, Error> {
+	/// The default character entity
+	pub async fn default_character(db: &Database) -> Result<Self, Error> {
 		let mana = 20;
 		let health = 20;
 		let action = 10;
