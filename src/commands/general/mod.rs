@@ -1,6 +1,6 @@
-pub mod ping;
+mod ping;
 pub use ping::*;
-pub mod help;
+mod help;
 pub use help::*;
 
 use serenity::framework::standard::macros::group;

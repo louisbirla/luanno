@@ -1,4 +1,4 @@
-pub mod gum;
+mod gum;
 pub use gum::*;
 
 use serenity::framework::standard::macros::group;

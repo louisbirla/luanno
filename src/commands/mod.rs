@@ -1,8 +1,8 @@
-pub mod general;
+mod general;
 pub use general::*;
-pub mod admin;
+mod admin;
 pub use admin::*;
-pub mod player;
+mod player;
 pub use player::*;
-pub mod character;
+mod character;
 pub use character::*;

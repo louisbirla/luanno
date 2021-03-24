@@ -1,6 +1,6 @@
-pub mod status;
+mod status;
 pub use status::*;
-pub mod manifest;
+mod manifest;
 pub use manifest::*;
 
 use serenity::framework::standard::macros::group;

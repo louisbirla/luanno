@@ -8,10 +8,10 @@ use std::{env, sync::Arc};
 mod commands;
 use commands::*;
 
-pub mod consts;
+mod consts;
 mod events;
-pub mod helpers;
-pub mod models;
+mod helpers;
+mod models;
 
 struct DatabaseConnection;
 

@@ -1,10 +1,10 @@
-pub mod godmod_check;
+mod godmod_check;
 pub use godmod_check::*;
-pub mod mod_check;
+mod mod_check;
 pub use mod_check::*;
-pub mod give_mod;
+mod give_mod;
 pub use give_mod::*;
-pub mod take_mod;
+mod take_mod;
 pub use take_mod::*;
 
 use serenity::framework::standard::macros::group;
