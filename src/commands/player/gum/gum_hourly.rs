@@ -7,24 +7,20 @@ const HOURLY_GUM: i64 = 10;
 
 #[command]
 #[bucket = "hourly"]
-#[description = "Claim free gum hourly."]
+/// Claim free gum hourly.
 pub async fn hourly(ctx: &Context, msg: &Message) -> CommandResult {
 	let data = ctx.data.read().await;
 	let db = data_db(&data);
 
-	let mut player = Player::from_user_id(db, msg.author.id).await.unwrap();
+	let mut player = Player::from_user_id(db, msg.author.id).await?;
 
-	player
-		.update_gum(db, player.gum + HOURLY_GUM)
-		.await
-		.unwrap();
+	player.update_gum(db, player.gum + HOURLY_GUM).await?;
 
 	msg.reply(
 		&ctx.http,
 		format!("**+{} gum** = {} gum", HOURLY_GUM, player.gum),
 	)
-	.await
-	.unwrap();
+	.await?;
 
 	Ok(())
 }

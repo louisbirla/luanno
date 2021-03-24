@@ -3,7 +3,7 @@ use serenity::model::prelude::*;
 use serenity::prelude::*;
 
 #[command]
-#[description = "A simple command to check if the app is running."]
+/// A simple command to check if the app is running.
 pub async fn ping(ctx: &Context, msg: &Message) -> CommandResult {
 	msg.channel_id.say(&ctx.http, "gnip!").await?;
 

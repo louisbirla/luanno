@@ -10,6 +10,7 @@ use serenity::prelude::*;
 // Some arguments require a `{}` in order to replace it with contextual information.
 // In this case our `{}` refers to a command's name.
 #[command_not_found_text = "Could not find: `{}`."]
+// Don't show the strikethrough help tip, it's pretty obvious
 #[strikethrough_commands_tip_in_guild = ""]
 // Define the maximum Levenshtein-distance between a searched command-name
 // and commands. If the distance is lower than or equal the set distance,
