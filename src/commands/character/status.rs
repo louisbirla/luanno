@@ -9,13 +9,12 @@ pub async fn status(ctx: &Context, msg: &Message) -> CommandResult {
 	let data = ctx.data.read().await;
 	let db = data_db(&data);
 
-	let player = Player::from_user_id(db, msg.author.id).await.unwrap();
+	let player = Player::from_user_id(db, msg.author.id).await?;
 	let entity = if let Some(entity) = player.entity {
 		entity
 	} else {
 		msg.reply(&ctx.http, "You don't have a character yet.")
-			.await
-			.unwrap();
+			.await?;
 		return Ok(());
 	};
 
@@ -43,8 +42,7 @@ pub async fn status(ctx: &Context, msg: &Message) -> CommandResult {
 			});
 			m
 		})
-		.await
-		.unwrap();
+		.await?;
 
 	Ok(())
 }

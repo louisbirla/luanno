@@ -32,8 +32,9 @@ async fn main() {
 	let client_options =
 		ClientOptions::parse(&env::var("MONGO_URL").expect("Expected the MongoDB connection URL"))
 			.await
-			.unwrap();
-	let client = MongoClient::with_options(client_options).unwrap();
+			.expect("Something broke when making client options for MongoDB");
+	let client = MongoClient::with_options(client_options)
+		.expect("Accessing the MongoDB client didn't end well.");
 	let db = client.database(&env::var("DB_NAME").expect("Expected the DB name"));
 
 	// Fetch the bot's id

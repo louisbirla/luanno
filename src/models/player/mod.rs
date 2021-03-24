@@ -3,6 +3,7 @@ use create::create_player;
 use mongodb::{
 	bson::{doc, Bson, Document},
 	error::Error,
+	results::UpdateResult,
 	Database,
 };
 use serenity::model::id::UserId;
@@ -26,7 +27,7 @@ impl Player {
 			player = Player::from_user_id_optional(db, user_id).await?;
 		}
 
-		Ok(player.unwrap())
+		Ok(player.expect("Creating a player still didn't work"))
 	}
 
 	pub async fn from_user_id_optional(
@@ -48,19 +49,45 @@ impl Player {
 }
 
 impl Player {
-	pub async fn update_gum(&mut self, db: &Database, new_count: i64) -> Result<(), Error> {
+	pub async fn update_gum(
+		&mut self,
+		db: &Database,
+		new_count: i64,
+	) -> Result<UpdateResult, Error> {
 		self.gum = new_count;
 
+		let update = doc! { "$set": { "gum": new_count }};
+
+		self.update(db, update).await
+	}
+}
+
+impl Player {
+	pub async fn update_entity(
+		&mut self,
+		db: &Database,
+		entity: Option<Entity>,
+	) -> Result<UpdateResult, Error> {
+		self.entity = entity;
+
+		let mut update = doc! { "$unset": { "entity": "" }};
+
+		if let Some(entity) = &self.entity {
+			update = doc! { "$set": { "entity": &entity.id } }
+		}
+
+		self.update(db, update).await
+	}
+}
+
+impl Player {
+	pub async fn update(&self, db: &Database, doc: Document) -> Result<UpdateResult, Error> {
 		let collection = db.collection(PLAYER_COLLECTION_NAME);
-		collection
-			.update_one(
-				doc! {"user_id": self.user_id.as_u64()},
-				doc! { "$set": { "gum": new_count }},
-				None,
-			)
+		let res = collection
+			.update_one(doc! {"user_id": self.user_id.as_u64()}, doc, None)
 			.await?;
 
-		Ok(())
+		Ok(res)
 	}
 }
 

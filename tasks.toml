@@ -12,6 +12,12 @@ install_crate = "clippy"
 command = "cargo"
 args = ["clippy"]
 
+[tasks.pre-commit]
+dependencies = [
+	"format",
+	"lint",
+]
+
 [tasks.run]
 command = "cargo"
 args = ["run"]

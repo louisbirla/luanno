@@ -13,13 +13,16 @@ use serenity::{prelude::*, utils::parse_mention};
 pub async fn take_mod(ctx: &Context, msg: &Message, args: Args) -> CommandResult {
 	let mention = args.rest();
 
-	let guild = msg.guild(&ctx.cache).await.unwrap();
+	let guild = msg
+		.guild(&ctx.cache)
+		.await
+		.expect("Accessing the guild broke.");
 
-	let id = parse_mention(mention).unwrap();
-	let mut member = guild.member(&ctx.http, id).await.unwrap();
-	member.remove_role(&ctx.http, MOD_ROLE_ID).await.unwrap();
+	let id = parse_mention(mention).expect("Mention was invalid");
+	let mut member = guild.member(&ctx.http, id).await?;
+	member.remove_role(&ctx.http, MOD_ROLE_ID).await?;
 
-	msg.react(&ctx.http, '👍').await.unwrap();
+	msg.react(&ctx.http, '👍').await?;
 
 	Ok(())
 }

@@ -16,11 +16,10 @@ pub async fn gum(ctx: &Context, msg: &Message) -> CommandResult {
 	let data = ctx.data.read().await;
 	let db = data_db(&data);
 
-	let player = Player::from_user_id(db, msg.author.id).await.unwrap();
+	let player = Player::from_user_id(db, msg.author.id).await?;
 
 	msg.reply(&ctx.http, format!("You have **{}** gum.", player.gum))
-		.await
-		.unwrap();
+		.await?;
 
 	Ok(())
 }
