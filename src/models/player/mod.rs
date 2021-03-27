@@ -1,9 +1,9 @@
 use serenity::model::id::UserId;
 
 mod doc_convert;
-mod from_user;
 mod new;
 mod update;
+mod user_convert;
 
 use super::entity::Entity;
 

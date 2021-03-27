@@ -1,5 +1,9 @@
 use mongodb::{bson::doc, error::Error, Database};
-use serenity::model::id::UserId;
+use serenity::{
+	http::CacheHttp,
+	model::{id::UserId, prelude::User},
+	Error as SerenityError,
+};
 
 use super::Player;
 
@@ -30,5 +34,12 @@ impl Player {
 		}
 
 		Ok(player)
+	}
+}
+
+impl Player {
+	/// Returns a Discord User from the Player's user id
+	pub async fn user(&self, cache_http: &impl CacheHttp) -> Result<User, SerenityError> {
+		self.user_id.clone().to_user(cache_http).await
 	}
 }

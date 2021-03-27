@@ -1,15 +1,31 @@
-use crate::{helpers::db::data_db, models::player::Player};
-use serenity::framework::standard::{macros::command, CommandResult};
+use crate::{
+	helpers::{db::data_db, name::user_name},
+	models::player::Player,
+};
 use serenity::model::prelude::*;
 use serenity::prelude::*;
+use serenity::{
+	framework::standard::{macros::command, Args, CommandResult},
+	utils::parse_mention,
+};
 
 #[command]
 /// Show your character status
-pub async fn status(ctx: &Context, msg: &Message) -> CommandResult {
+pub async fn status(ctx: &Context, msg: &Message, args: Args) -> CommandResult {
 	let data = ctx.data.read().await;
 	let db = data_db(&data);
 
-	let player = Player::from_user_id(db, msg.author.id).await?;
+	let mut user = msg.author.clone();
+
+	// If a user is mentioned, show their status instead of yours
+	let mention = args.rest();
+	if !mention.trim().is_empty() {
+		user = UserId(parse_mention(mention).expect("Mention was invalid"))
+			.to_user(&ctx.http)
+			.await?;
+	}
+
+	let player = Player::from_user_id(db, user.id).await?;
 	// Make sure the user has a character
 	let entity = if let Some(entity) = player.entity {
 		entity
@@ -19,13 +35,14 @@ pub async fn status(ctx: &Context, msg: &Message) -> CommandResult {
 		return Ok(());
 	};
 
+	let name = user_name(&ctx.http, user).await;
 	msg.channel_id
 		.send_message(&ctx.http, |m| {
 			m.embed(|e| {
-				e.title(format!("{}/status", msg.author.name));
+				e.title(format!("{}/status", name));
 				e.field(
 					"AP :crossed_swords:",
-					format!("{}/{}", entity.action, entity.max_action),
+					format!("{}/{}", entity.ap, entity.max_ap),
 					true,
 				);
 				e.field(

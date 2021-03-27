@@ -14,8 +14,8 @@ impl Entity {
 			max_mana: mana,
 			health,
 			max_health: health,
-			action,
-			max_action: action,
+			ap: action,
+			max_ap: action,
 			entity_type: EntityType::from_name(db, "Character")
 				.await?
 				.expect("Character entity needs to exist in the database"),

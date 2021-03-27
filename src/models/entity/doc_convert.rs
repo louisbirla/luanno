@@ -27,8 +27,8 @@ impl Entity {
 			max_mana,
 			health,
 			max_health,
-			action,
-			max_action,
+			ap: action,
+			max_ap: max_action,
 			entity_type,
 			id: id.clone(),
 		})
@@ -49,8 +49,8 @@ impl From<&Entity> for Document {
 		doc.insert("max_mana", entity.max_mana);
 		doc.insert("health", entity.health);
 		doc.insert("max_health", entity.max_health);
-		doc.insert("action_points", entity.action);
-		doc.insert("max_action_points", entity.max_action);
+		doc.insert("action_points", entity.ap);
+		doc.insert("max_action_points", entity.max_ap);
 
 		doc.insert("type", entity.entity_type.id.clone());
 

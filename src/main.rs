@@ -1,3 +1,5 @@
+#![feature(box_syntax)]
+
 use events::Handler;
 use log::*;
 use mongodb::{options::ClientOptions, Client as MongoClient, Database};
@@ -59,6 +61,7 @@ async fn main() {
 		.help(&HELP_COMMAND)
 		.group(&GENERAL_GROUP)
 		.group(&PLAYER_GROUP)
+		.group(&GAME_GROUP)
 		.group(&CHARACTER_GROUP)
 		.group(&MODCOMMANDS_GROUP);
 

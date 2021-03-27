@@ -6,3 +6,5 @@ mod player;
 pub use player::*;
 mod character;
 pub use character::*;
+mod game;
+pub use game::*;
