@@ -7,7 +7,7 @@ edition = "2018"
 [dependencies]
 serenity = { version = "0.10", default-features = false, features = ["framework", "standard_framework", "rustls_backend", "gateway", "cache"]}
 tokio = { version = "1.6.1", features = ["macros", "rt-multi-thread"] }
-rand = "0.8.3"
+rand = "0.8.4"
 # Logging
 log = "0.4"
 pretty_env_logger = "0.4"
